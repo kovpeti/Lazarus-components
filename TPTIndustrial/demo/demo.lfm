@@ -1,0 +1,56 @@
+object Form1: TForm1
+  Left = 798
+  Height = 226
+  Top = 363
+  Width = 640
+  Caption = 'PetiTect TTi1604 components demo'
+  ClientHeight = 226
+  ClientWidth = 640
+  LCLVersion = '1.6.4.0'
+  object TTi1604DsplPanel1: TTTi1604DsplPanel
+    Left = 18
+    Height = 80
+    Top = 54
+    Width = 332
+    BevelOuter = bvNone
+    Caption = 'TTi1604DsplPanel1'
+    ClientHeight = 80
+    ClientWidth = 332
+    Color = clBlack
+    ParentColor = False
+    TabOrder = 0
+    Signs = []
+    Value = 0
+    Text = '0.0000'
+  end
+  object TTi1604ButtonPanel1: TTTi1604ButtonPanel
+    Left = 360
+    Height = 112
+    Top = 40
+    Width = 258
+    BevelOuter = bvNone
+    Caption = 'TTi1604ButtonPanel1'
+    ClientHeight = 112
+    ClientWidth = 258
+    Color = clBlack
+    ParentColor = False
+    TabOrder = 1
+    Button = 0
+    SerialComm = TTi1604Comm1
+  end
+  object ToggleBox1: TToggleBox
+    Left = 24
+    Height = 48
+    Top = 152
+    Width = 90
+    Caption = 'Start/Stop'
+    OnChange = ToggleBox1Change
+    TabOrder = 2
+  end
+  object TTi1604Comm1: TTTi1604Comm
+    Port = 'COM11'
+    Display = TTi1604DsplPanel1
+    left = 232
+    top = 152
+  end
+end
