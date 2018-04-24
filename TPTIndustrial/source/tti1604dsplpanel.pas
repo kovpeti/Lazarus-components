@@ -24,6 +24,7 @@
  $Revision$
 23/03/2018    <@> 0.0.2.10 First release
 28/03/2018    <@> 0.1.0.0  First public release
+24/04/2018    <@> 0.1.1.0  SetText converts number to FValue. If text is not valid FValue=0
 
   $Author$
   Peter Kovacs - PetiTech.tk
@@ -152,9 +153,23 @@ implementation
 {$R PTTtiDsplPng.res}
 
 procedure TCustomTTi1604DsplPanel.SetText(NewText:string);
+var
+    DefDecSep:char;  { to avoid different language settings }
 begin
      FText:=NewText;
      Numbers.Caption:=FText;
+     //Convert text to Double if text is number
+     DefDecSep:=DefaultFormatSettings.DecimalSeparator;  //Save default DecimalSeparator
+     DefaultFormatSettings.DecimalSeparator:='.';        //Always '.'
+     try
+        try
+           FValue:=StrToFloat(NewText);
+        except
+            On E : Exception do FValue:=0;
+        end;
+     finally
+       DefaultFormatSettings.DecimalSeparator:=DefDecSep;  //Restore system settings
+     end;
 end;
 
 function TCustomTTi1604DsplPanel.GetText:string;
@@ -180,6 +195,7 @@ begin
      if NewValue<0 then FSigns:=FSigns+[skNegSign] else FSigns:=FSigns-[skNegSign];         {Negative sign}
      SetSigns(FSigns);
      DefaultFormatSettings.DecimalSeparator:=DefDecSep;  //Restore system settings
+     FValue:=NewValue;
 end;
 
 function TCustomTTi1604DsplPanel.GetValue:double;
