@@ -2,7 +2,7 @@
 
 TPTIndustrial makes easy to connect test equipments.
 
-**Current version:** 0.1.00
+**Current version:** 0.1.1
 
 ### Available components:
  - ![TTTi1604DsplPanel](resources/TTTi1604DsplPanel.png) TTTi1604DsplPanel
@@ -65,6 +65,7 @@ Offers full communication layer.
  - Can send commands from TTTiButtonPanel
 
 #### New properties and Methodes:
+
 ##### Properties:
 - **Port** - The used serial port. Ex: On Windows com1, on Linux /dev/TTyS1
 - **Active** - Boolean property, Activate/Deactivate communication
@@ -72,7 +73,7 @@ Offers full communication layer.
 - **OffMsg** - Visible text when Active=false
 
 ##### Methodes:
-No added methode.
+- **getMeasurement** - Returns with measured value
 
 ## Known bugs and limitations:
 Currently tested on Windows (XP,7,10) only.
