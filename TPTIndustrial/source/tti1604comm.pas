@@ -24,6 +24,8 @@
  $Revision$
 23/03/2018    <@> 0.0.2.10 First release
 28/03/2018    <@> 0.1.0.0  First public release
+12/09/2018    <@> 0.1.1.0  Added getMeasurement
+14/09/2018    <@> 0.1.2.0  There was a bug, Port config must be after connect
 
   $Author$
   Peter Kovacs - PetiTech.tk
@@ -83,6 +85,7 @@ type
     destructor Destroy; override;
     procedure SendCommand(Command:integer);   {Send command to instrument}
     procedure ReadComm(ASender:TObject);      {Timer OnTimer event, reading data from Comm port}
+    function getMeasurement:string;           {Convert data stream to string. Same then SendDataToDisplay but without display}
   published
     { Published declarations }
 
@@ -199,6 +202,47 @@ begin
      FDisplay.Text:=NumDisplay;
 end;
 
+function TCustomTTi1604Comm.GetMeasurement:string;
+var NumDisplay:string;
+    i,j:integer;
+begin
+     if FRxData[0] <>13 then exit;
+     //Sign
+     if (FRxData[3] and %00000010)>0 then NumDisplay:='-' else NumDisplay:='';
+     //Numbers and decimal dot
+     j:=2;
+     //NumDisplay:='';
+     for i:=4 to 8 do begin
+       case FRxData[i] of
+            0:;//NumDisplay:=NumDisplay+' ';
+            252:NumDisplay:=NumDisplay+'0';
+            253:begin NumDisplay:=NumDisplay+'0'; inc(j); NumDisplay:=NumDisplay+'.'; end;
+            96:NumDisplay:=NumDisplay+'1';
+            97:begin NumDisplay:=NumDisplay+'1'; inc(j); NumDisplay:=NumDisplay+'.'; end;
+            218:NumDisplay:=NumDisplay+'2';
+            219:begin NumDisplay:=NumDisplay+'2'; inc(j); NumDisplay:=NumDisplay+'.'; end;
+            242:NumDisplay:=NumDisplay+'3';
+            243:begin NumDisplay:=NumDisplay+'3'; inc(j); NumDisplay:=NumDisplay+'.'; end;
+            102:NumDisplay:=NumDisplay+'4';
+            103:begin NumDisplay:=NumDisplay+'4'; inc(j); NumDisplay:=NumDisplay+'.'; end;
+            182:NumDisplay:=NumDisplay+'5';
+            183:begin NumDisplay:=NumDisplay+'5'; inc(j); NumDisplay:=NumDisplay+'.'; end;
+            190:NumDisplay:=NumDisplay+'6';
+            191:begin NumDisplay:=NumDisplay+'6'; inc(j); NumDisplay:=NumDisplay+'.'; end;
+            224:NumDisplay:=NumDisplay+'7';
+            225:begin NumDisplay:=NumDisplay+'7'; inc(j); NumDisplay:=NumDisplay+'.'; end;
+            254:NumDisplay:=NumDisplay+'8';
+            255:begin NumDisplay:=NumDisplay+'8'; inc(j); NumDisplay:=NumDisplay+'.'; end;
+            230:NumDisplay:=NumDisplay+'9';
+            231:begin NumDisplay:=NumDisplay+'9'; inc(j); NumDisplay:=NumDisplay+'.'; end;
+            142:;//NumDisplay:=NumDisplay+'F';
+            28:;//NumDisplay:=NumDisplay+'L';
+       end;
+       inc(j);
+     end;
+     result:=NumDisplay;
+end;
+
 procedure TCustomTTi1604Comm.ReadComm(ASender:TObject);
 var i:integer;
     c:byte;
@@ -252,6 +296,11 @@ begin
         {Activate communication}
         if not(FSerial.InstanceActive) then begin
            FSerial.Connect(FPort);
+           if FSerial.LastError<>0 then begin
+              raise ECustomTTi1604CommException.Create(FSerial.GetErrorDesc(FSerial.LastError));
+              exit;
+           end;
+           FSerial.Config(9600,8,'N',SB1,false,false);
            if FSerial.LastError<>0 then begin
               raise ECustomTTi1604CommException.Create(FSerial.GetErrorDesc(FSerial.LastError));
               exit;
@@ -315,7 +364,6 @@ begin
     Enabled:=false;
   end;
   FSerial:=TBlockSerial.Create;
-  FSerial.Config(9600,8,'n',1,false,false);
 end;
 
 destructor TCustomTTi1604Comm.Destroy;
