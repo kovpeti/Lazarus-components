@@ -25,6 +25,8 @@
 23/03/2018    <@> 0.0.2.10 First release
 28/03/2018    <@> 0.1.0.0  First public release
 24/04/2018    <@> 0.1.1.0  SetText converts number to FValue. If text is not valid FValue=0
+12/10/2018    <@> 0.1.1.1  Display signs set in different aproach
+15/10/2018    <@> 0.1.1.2  There was a bug, Comm sets TEXT value but SetText did not care about negative sign
 
   $Author$
   Peter Kovacs - PetiTech.tk
@@ -164,6 +166,7 @@ begin
      try
         try
            FValue:=StrToFloat(NewText);
+           if (skNegSign in FSigns) then FValue:=FValue*-1;
         except
             On E : Exception do FValue:=0;
         end;
@@ -220,7 +223,7 @@ end;
 procedure TCustomTTi1604DsplPanel.SetSigns(NewSigns:TSigns);
 begin
      FSigns:=NewSigns;
-     if (skACSign in FSigns) then ACSign.Visible:=true else ACSign.Visible:=false;
+     {if (skACSign in FSigns) then ACSign.Visible:=true else ACSign.Visible:=false;
      if (skDCSign in FSigns) then DCSign.Visible:=true else DCSign.Visible:=false;
      if (skNegSign in FSigns) then NegSign.Visible:=true else NegSign.Visible:=false;
      if (skmVSign in FSigns) then mVSign.Visible:=true else mVSign.Visible:=false;
@@ -237,7 +240,25 @@ begin
      if (skDSign in FSigns) then DSign.Visible:=true else DSign.Visible:=false;
      if (skHzSign in FSigns) then HzSign.Visible:=true else HzSign.Visible:=false;
      if (skAutoSign in FSigns) then AutoSign.Visible:=true else AutoSign.Visible:=false;
-     if (skContSign in FSigns) then ContSign.Visible:=true else ContSign.Visible:=false;
+     if (skContSign in FSigns) then ContSign.Visible:=true else ContSign.Visible:=false;}
+     ACSign.Visible:=(skACSign in FSigns);
+     DCSign.Visible:=(skDCSign in FSigns);
+     NegSign.Visible:=(skNegSign in FSigns);
+     mVSign.Visible:=(skmVSign in FSigns);
+     VSign.Visible:=(skVSign in FSigns);
+     HoldSign.Visible:=(skHoldSign in FSigns);
+     THldSign.Visible:=(skTHldSign in FSigns);
+     mASign.Visible:=(skmASign in FSigns);
+     ASign.Visible:=(skASign in FSigns);
+     MinSign.Visible:=(skMinSign in FSigns);
+     NullSign.Visible:=(skNullSign in FSigns);
+     RSign.Visible:=(skRSign in FSigns);
+     kRSign.Visible:=(skkRSign in FSigns);
+     MaxSign.Visible:=(skMaxSign in FSigns);
+     DSign.Visible:=(skDSign in FSigns);
+     HzSign.Visible:=(skHzSign in FSigns);
+     AutoSign.Visible:=(skAutoSign in FSigns);
+     ContSign.Visible:=(skContSign in FSigns);
 end;
 
 constructor TCustomTTi1604DsplPanel.Create(AOwner: TComponent);
